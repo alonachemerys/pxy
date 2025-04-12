@@ -1,12 +1,14 @@
-FROM python:3.7-alpine
+# Use a lightweight Node image
+FROM node:18-alpine
 
-WORKDIR /code
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-RUN apk add --no-cache gcc musl-dev linux-headers
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+# Set working directory
+WORKDIR /app
 
-EXPOSE 5000
-COPY . .
-CMD ["flask", "run"]
+# Install the hls-proxy package globally
+RUN npm install -g @warren-bank/hls-proxy
+
+# Expose the port the app will run on
+EXPOSE 5050
+
+# Command to start the proxy
+CMD ["hlsd", "--port", "5050"]
